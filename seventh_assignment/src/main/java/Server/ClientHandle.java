@@ -1,3 +1,5 @@
+package Server;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -19,13 +21,8 @@ public class ClientHandle implements Runnable {
         this.out = new DataOutputStream(client.getOutputStream());
         this.history = history;
         sendToOne();
-
-        //todo: maybe should add name here
     }
 
-    public static void showPerChat(){
-
-    }
 
     @Override
     public void run() {

@@ -1,5 +1,8 @@
 // Server Class
+package Server;
 
+
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -15,6 +18,8 @@ public class Server {
     private static final int port = 3000;
     private static ArrayList<Socket> clients = new ArrayList<>();
     private static ExecutorService pool = Executors.newFixedThreadPool(8);
+    private static ExecutorService poolFile = Executors.newFixedThreadPool(8);
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int history = 0;
@@ -33,10 +38,18 @@ public class Server {
             System.out.println("[SERVER] Server started. Waiting for client connections...");
             while (true){
                 Socket client = listen.accept();
-                System.out.println("[SERVER] Connected to client: " + client.getInetAddress());
-                ClientHandle clientHandle = new ClientHandle(client , clients, history);
-                clients.add(client);
-                pool.execute(clientHandle);
+                DataInputStream in = new DataInputStream(client.getInputStream());
+                String op = in.readUTF();
+                if(op.equals("1")){
+                    System.out.println("[SERVER] Connected to client [CHAT]: " + client.getInetAddress());
+                    ClientHandle clientHandle = new ClientHandle(client, clients, history);
+                    clients.add(client);
+                    pool.execute(clientHandle);
+                }else if(op.equals("2")){
+                    System.out.println("[SERVER] Connected to client [File]: " + client.getInetAddress());
+                    FileHandle fileHandle = new FileHandle(client);
+                    poolFile.execute(fileHandle);
+                }
             }
         }catch (IOException e){
             e.printStackTrace();
