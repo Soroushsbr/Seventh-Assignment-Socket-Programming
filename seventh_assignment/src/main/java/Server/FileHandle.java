@@ -2,6 +2,7 @@ package Server;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class FileHandle implements Runnable{
     private Socket client;
@@ -15,8 +16,8 @@ public class FileHandle implements Runnable{
     @Override
     public void run() {
         try {
-            File folder = new File("src/main/java/Server/data");
-//            File folder = new File("C:\\Users\\Lenovo\\Desktop\\Java Projects\\Seventh-Assignment-Socket-Programming\\seventh_assignment\\src\\main\\java\\Server\\data");
+//            File folder = new File("src/main/java/Server/data/");
+            File folder = new File("C:\\Users\\Lenovo\\Desktop\\Java Projects\\Seventh-Assignment-Socket-Programming\\seventh_assignment\\src\\main\\java\\Server\\data");
             File[] filesList = folder.listFiles();
             String list = "";
             if(filesList != null){
@@ -33,14 +34,16 @@ public class FileHandle implements Runnable{
             int req = Integer.parseInt(request) - 1;
             assert filesList != null;
             File chosenFile = filesList[req];
-            File targetFolder = new File("src/main/java/Client");
-//            File targetFolder = new File("C:\\Users\\Lenovo\\Desktop\\Java Projects\\Seventh-Assignment-Socket-Programming\\seventh_assignment\\src\\main\\java\\Client");
-            boolean success = chosenFile.renameTo(new File(targetFolder, chosenFile.getName()));
-            if (success) {
-                out.writeUTF("File downloaded successfully!");
-            } else {
-                out.writeUTF("File download failed.");
+//            File targetFolder = new File("src/main/java/Client/");
+            File targetFolder = new File("C:\\Users\\Lenovo\\Desktop\\Java Projects\\Seventh-Assignment-Socket-Programming\\seventh_assignment\\src\\main\\java\\Client\\" + chosenFile.getName());
+            String data = "";
+            Scanner reader = new Scanner(chosenFile);
+            while (reader.hasNextLine()){
+                data  = data + reader.nextLine();
             }
+            FileWriter writer = new FileWriter(targetFolder);
+            writer.write(data);
+            writer.close();
 //            byte[] byteArray = new byte[(int) chosenFile.length()];
 //            BufferedInputStream BIS = new BufferedInputStream(new FileInputStream(chosenFile));
 //            BIS.read(byteArray , 0 , byteArray.length);

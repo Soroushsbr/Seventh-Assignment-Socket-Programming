@@ -43,6 +43,7 @@ public class Client {
         Socket client = new Socket(server_IP , server_port);
         DataOutputStream out = new DataOutputStream(client.getOutputStream());
         out.writeUTF("1"); //to tell the server which one the client chose
+
         out.writeUTF(name + " connected to server.");
 
         ServerHandle serverHandle = new ServerHandle(client , new ArrayList<>());
@@ -51,7 +52,7 @@ public class Client {
 
         while (true){
             userInput = "[" + name + "]: " + reader.readLine();
-            if(userInput.equals(name + ": " + null)){
+            if(userInput.equals("[" + name + "]: " + null)){
                 out.writeUTF(name + " Left the Server.");
                 break;
             }
@@ -70,6 +71,9 @@ public class Client {
 
         String userInput = reader.readLine();
         out.writeUTF(userInput);
+
+        //---this one is for a file that isn't just .txt format
+
 //        byte[] byteArray = new byte[1024];
 //        FileOutputStream fileOutputStream = new FileOutputStream("C:\\Users\\Lenovo\\Desktop\\Java Projects\\Seventh-Assignment-Socket-Programming\\seventh_assignment\\src\\main\\java\\Client");
 //        BufferedOutputStream bos = new BufferedOutputStream(fileOutputStream);
@@ -77,5 +81,6 @@ public class Client {
 //        int bytesRead = in.read(byteArray, 0, byteArray.length);
 //        bos.write(byteArray, 0, bytesRead);
 //        bos.close();
+        //---
     }
 }

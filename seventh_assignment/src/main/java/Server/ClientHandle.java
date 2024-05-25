@@ -33,8 +33,7 @@ public class ClientHandle implements Runnable {
                 massages.add(request);
                 sendToAll(request);
             }
-        }catch (IOException e){
-            e.printStackTrace();
+        }catch (IOException ignored){
         }finally {
             try {
                 in.close();
@@ -65,8 +64,10 @@ public class ClientHandle implements Runnable {
 
     private void sendToAll(String msg) throws IOException{
         for(Socket client : clients){
-            DataOutputStream out = new DataOutputStream(client.getOutputStream());
-            out.writeUTF(msg);
+            if(this.client != client) {
+                DataOutputStream out = new DataOutputStream(client.getOutputStream());
+                out.writeUTF(msg);
+            }
         }
     }
 }
